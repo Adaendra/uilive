@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/Adaendra/uilive/pkg/writer"
+	"github.com/Adaendra/uilive"
 )
 
 func main() {
-	writer := writer.New()
+	writer := uilive.New()
 
 	// start listening to updates and render
 	writer.Start()

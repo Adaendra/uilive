@@ -33,7 +33,7 @@ func GetTermSize() (int, int) {
 			return 0, 0
 		}
 	}
-	_, _, _ = syscall.Syscall(syscall.SYS_IOCTL,
-		out.Fd(), uintptr(syscall.TIOCGWINSZ), uintptr(unsafe.Pointer(&sz)))
+	_, _, _ = syscall.Syscall(syscall.SYS_IOCTL, out.Fd(), uintptr(syscall.TIOCGWINSZ), uintptr(unsafe.Pointer(&sz)))
+
 	return int(sz.cols), int(sz.rows)
 }

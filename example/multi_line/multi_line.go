@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/Adaendra/uilive/pkg/writer"
+	"github.com/Adaendra/uilive"
 )
 
 func main() {
-	writer := writer.New()
+	writer := uilive.New()
 
 	// start listening for updates and render
 	writer.Start()
@@ -23,5 +23,7 @@ func main() {
 		_, _ = fmt.Fprintf(writer.Bypass(), "Downloaded %s\n", f[1])
 	}
 	_, _ = fmt.Fprintln(writer, "Finished: Downloaded 150GB")
-	writer.Stop() // flush and stop rendering
+
+	// flush and stop rendering
+	writer.Stop()
 }

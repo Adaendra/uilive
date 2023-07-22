@@ -4,10 +4,12 @@
 package terminal
 
 import (
-	"github.com/Adaendra/uilive/pkg/kernel"
-	"golang.org/x/sys/windows"
 	"os"
 	"unsafe"
+
+	"golang.org/x/sys/windows"
+
+	"github.com/Adaendra/uilive/pkg/kernel"
 )
 
 func GetTermSize() (int, int) {
