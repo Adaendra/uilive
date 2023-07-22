@@ -12,6 +12,10 @@ import (
 // ESC is the ASCII code for escape character
 const ESC = 27
 
+// ASCII_END_COLOR_CODE is the last character in an ASCII escape code that
+// changes the color
+const ASCII_END_COLOR_CODE = 'm'
+
 // RefreshInterval is the default refresh interval to update the ui
 var RefreshInterval = time.Millisecond
 
@@ -85,16 +89,31 @@ func (w *Writer) Flush() error {
 
 	lines := 0
 	var currentLine bytes.Buffer
-	for _, b := range w.buf.Bytes() {
-		if b == '\n' {
+	var escaping bool
+
+	bytes := w.buf.Bytes()
+	bytesLen := len(bytes)
+	for i, b := range bytes {
+		switch {
+		case b == '\n':
 			lines++
 			currentLine.Reset()
-		} else {
+		case b == ESC:
+			// All ASCII escape sequences start with ESC, followed by a second
+			// byte in the 0x40 to 0x5F range.
+			if i < bytesLen-1 && bytes[i+1] >= 0x40 && bytes[i+1] <= 0x5F {
+				escaping = true
+			}
+		case escaping && b == ASCII_END_COLOR_CODE:
+			escaping = false
+		default:
 			if overFlowHandled && currentLine.Len() >= termWidth {
 				lines++
 				currentLine.Reset()
 			}
-			currentLine.Write([]byte{b})
+			if !escaping {
+				currentLine.Write([]byte{b})
+			}
 		}
 	}
 	w.lineCount = lines

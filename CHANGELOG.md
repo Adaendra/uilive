@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Make "getTermSize()" use local variables instead of package-level ones [fork #39](https://github.com/gosuri/uilive/pull/39)
 - Writer.Flush: properly compute line count for buffers longer than 2 lines [fork #33](https://github.com/gosuri/uilive/pull/33)
+- Fix wrong screen drawing by not counting ASCII color codes [fork #30](https://github.com/gosuri/uilive/pull/30)
 
 ## [0.1.0] - 2023-07-22
 ### Added
