@@ -1,6 +1,7 @@
+//go:build !windows
 // +build !windows
 
-package uilive
+package terminal
 
 import (
 	"os"
@@ -10,15 +11,16 @@ import (
 )
 
 type windowSize struct {
-	rows    uint16
-	cols    uint16
+	rows uint16
+	cols uint16
 }
 
-var out *os.File
-var err error
-var sz windowSize
-
-func getTermSize() (int, int) {
+func GetTermSize() (int, int) {
+	var (
+		out *os.File
+		err error
+		sz  windowSize
+	)
 	if runtime.GOOS == "openbsd" {
 		out, err = os.OpenFile("/dev/tty", os.O_RDWR, 0)
 		if err != nil {
@@ -31,7 +33,7 @@ func getTermSize() (int, int) {
 			return 0, 0
 		}
 	}
-	_, _, _ = syscall.Syscall(syscall.SYS_IOCTL,
-		out.Fd(), uintptr(syscall.TIOCGWINSZ), uintptr(unsafe.Pointer(&sz)))
+	_, _, _ = syscall.Syscall(syscall.SYS_IOCTL, out.Fd(), uintptr(syscall.TIOCGWINSZ), uintptr(unsafe.Pointer(&sz)))
+
 	return int(sz.cols), int(sz.rows)
 }

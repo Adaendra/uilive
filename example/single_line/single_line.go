@@ -1,4 +1,4 @@
-package uilive_test
+package main
 
 import (
 	"fmt"
@@ -7,7 +7,7 @@ import (
 	"github.com/Adaendra/uilive"
 )
 
-func Example() {
+func main() {
 	writer := uilive.New()
 
 	// start listening to updates and render

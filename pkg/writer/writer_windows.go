@@ -1,21 +1,14 @@
+//go:build windows
 // +build windows
 
-package uilive
+package writer
 
 import (
 	"fmt"
-	"strings"
-	"syscall"
-	"unsafe"
+	"github.com/Adaendra/uilive/pkg/kernel"
 	"github.com/mattn/go-isatty"
-)
-
-var kernel32 = syscall.NewLazyDLL("kernel32.dll")
-
-var (
-	procGetConsoleScreenBufferInfo = kernel32.NewProc("GetConsoleScreenBufferInfo")
-	procSetConsoleCursorPosition   = kernel32.NewProc("SetConsoleCursorPosition")
-	procFillConsoleOutputCharacter = kernel32.NewProc("FillConsoleOutputCharacterW")
+	"strings"
+	"unsafe"
 )
 
 // clear the line and move the cursor up
@@ -37,7 +30,7 @@ type smallRect struct {
 	bottom short
 }
 
-type consoleScreenBufferInfo struct {
+type ConsoleScreenBufferInfo struct {
 	size              coord
 	cursorPosition    coord
 	attributes        word
@@ -55,13 +48,13 @@ func (w *Writer) clearLines() {
 		return
 	}
 	fd := f.Fd()
-	var csbi consoleScreenBufferInfo
-	_, _, _ = procGetConsoleScreenBufferInfo.Call(fd, uintptr(unsafe.Pointer(&csbi)))
+	var csbi ConsoleScreenBufferInfo
+	_, _, _ = kernel.ProcGetConsoleScreenBufferInfo.Call(fd, uintptr(unsafe.Pointer(&csbi)))
 
 	for i := 0; i < w.lineCount; i++ {
 		// move the cursor up
 		csbi.cursorPosition.y--
-		_, _, _ = procSetConsoleCursorPosition.Call(fd, uintptr(*(*int32)(unsafe.Pointer(&csbi.cursorPosition))))
+		_, _, _ = kernel.ProcSetConsoleCursorPosition.Call(fd, uintptr(*(*int32)(unsafe.Pointer(&csbi.cursorPosition))))
 		// clear the line
 		cursor := coord{
 			x: csbi.window.left,
@@ -69,6 +62,6 @@ func (w *Writer) clearLines() {
 		}
 		var count, w dword
 		count = dword(csbi.size.x)
-		_, _, _ = procFillConsoleOutputCharacter.Call(fd, uintptr(' '), uintptr(count), *(*uintptr)(unsafe.Pointer(&cursor)), uintptr(unsafe.Pointer(&w)))
+		_, _, _ = kernel.ProcFillConsoleOutputCharacter.Call(fd, uintptr(' '), uintptr(count), *(*uintptr)(unsafe.Pointer(&cursor)), uintptr(unsafe.Pointer(&w)))
 	}
 }

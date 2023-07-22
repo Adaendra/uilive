@@ -23,5 +23,7 @@ func main() {
 		_, _ = fmt.Fprintf(writer.Bypass(), "Downloaded %s\n", f[1])
 	}
 	_, _ = fmt.Fprintln(writer, "Finished: Downloaded 150GB")
-	writer.Stop() // flush and stop rendering
+
+	// flush and stop rendering
+	writer.Stop()
 }
