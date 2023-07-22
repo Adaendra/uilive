@@ -1,4 +1,4 @@
-package uilive
+package writer
 
 import (
 	"bytes"

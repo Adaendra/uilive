@@ -1,8 +1,10 @@
+//go:build windows
 // +build windows
 
-package uilive
+package terminal
 
 import (
+	"github.com/Adaendra/uilive"
 	"os"
 	"unsafe"
 )
@@ -14,8 +16,8 @@ func getTermSize() (int, int) {
 	}
 	defer out.Close()
 
-	var csbi consoleScreenBufferInfo
-	ret, _, _ := procGetConsoleScreenBufferInfo.Call(out.Fd(), uintptr(unsafe.Pointer(&csbi)))
+	var csbi uilive.consoleScreenBufferInfo
+	ret, _, _ := uilive.procGetConsoleScreenBufferInfo.Call(out.Fd(), uintptr(unsafe.Pointer(&csbi)))
 	if ret == 0 {
 		return 0, 0
 	}

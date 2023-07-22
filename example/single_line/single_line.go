@@ -1,14 +1,14 @@
-package uilive_test
+package main
 
 import (
 	"fmt"
 	"time"
 
-	"github.com/Adaendra/uilive"
+	"github.com/Adaendra/uilive/pkg/writer"
 )
 
-func Example() {
-	writer := uilive.New()
+func main() {
+	writer := writer.New()
 
 	// start listening to updates and render
 	writer.Start()

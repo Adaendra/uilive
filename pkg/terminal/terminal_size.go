@@ -1,7 +1,7 @@
 //go:build !windows
 // +build !windows
 
-package uilive
+package terminal
 
 import (
 	"os"

@@ -1,8 +1,9 @@
-package uilive
+package writer
 
 import (
 	"bytes"
 	"errors"
+	"github.com/Adaendra/uilive/pkg/terminal"
 	"io"
 	"os"
 	"sync"
@@ -61,7 +62,7 @@ type newline struct {
 
 // New returns a new Writer with defaults
 func New() *Writer {
-	termWidth, _ = getTermSize()
+	termWidth, _ = terminal.getTermSize()
 	if termWidth != 0 {
 		overFlowHandled = true
 	}
