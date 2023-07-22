@@ -4,23 +4,24 @@
 package terminal
 
 import (
-	"github.com/Adaendra/uilive"
+	"github.com/Adaendra/uilive/pkg/writer"
+	"golang.org/x/sys/windows"
 	"os"
 	"unsafe"
 )
 
-func getTermSize() (int, int) {
+func GetTermSize() (int, int) {
 	out, err := os.Open("CONOUT$")
 	if err != nil {
 		return 0, 0
 	}
 	defer out.Close()
 
-	var csbi uilive.consoleScreenBufferInfo
-	ret, _, _ := uilive.procGetConsoleScreenBufferInfo.Call(out.Fd(), uintptr(unsafe.Pointer(&csbi)))
+	var csbi windows.ConsoleScreenBufferInfo
+	ret, _, _ := writer.ProcGetConsoleScreenBufferInfo.Call(out.Fd(), uintptr(unsafe.Pointer(&csbi)))
 	if ret == 0 {
 		return 0, 0
 	}
 
-	return int(csbi.window.right - csbi.window.left + 1), int(csbi.window.bottom - csbi.window.top + 1)
+	return int(csbi.Window.Right - csbi.Window.Left + 1), int(csbi.Window.Bottom - csbi.Window.Top + 1)
 }

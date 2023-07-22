@@ -15,7 +15,7 @@ type windowSize struct {
 	cols uint16
 }
 
-func getTermSize() (int, int) {
+func GetTermSize() (int, int) {
 	var (
 		out *os.File
 		err error

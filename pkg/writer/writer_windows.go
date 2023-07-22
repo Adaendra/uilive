@@ -14,7 +14,7 @@ import (
 var kernel32 = syscall.NewLazyDLL("kernel32.dll")
 
 var (
-	procGetConsoleScreenBufferInfo = kernel32.NewProc("GetConsoleScreenBufferInfo")
+	ProcGetConsoleScreenBufferInfo = kernel32.NewProc("GetConsoleScreenBufferInfo")
 	procSetConsoleCursorPosition   = kernel32.NewProc("SetConsoleCursorPosition")
 	procFillConsoleOutputCharacter = kernel32.NewProc("FillConsoleOutputCharacterW")
 )
@@ -38,7 +38,7 @@ type smallRect struct {
 	bottom short
 }
 
-type consoleScreenBufferInfo struct {
+type ConsoleScreenBufferInfo struct {
 	size              coord
 	cursorPosition    coord
 	attributes        word
@@ -56,8 +56,8 @@ func (w *Writer) clearLines() {
 		return
 	}
 	fd := f.Fd()
-	var csbi consoleScreenBufferInfo
-	_, _, _ = procGetConsoleScreenBufferInfo.Call(fd, uintptr(unsafe.Pointer(&csbi)))
+	var csbi ConsoleScreenBufferInfo
+	_, _, _ = ProcGetConsoleScreenBufferInfo.Call(fd, uintptr(unsafe.Pointer(&csbi)))
 
 	for i := 0; i < w.lineCount; i++ {
 		// move the cursor up

@@ -62,7 +62,7 @@ type newline struct {
 
 // New returns a new Writer with defaults
 func New() *Writer {
-	termWidth, _ = terminal.getTermSize()
+	termWidth, _ = terminal.GetTermSize()
 	if termWidth != 0 {
 		overFlowHandled = true
 	}
