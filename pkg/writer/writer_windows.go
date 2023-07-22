@@ -5,18 +5,10 @@ package writer
 
 import (
 	"fmt"
+	"github.com/Adaendra/uilive/pkg/kernel"
 	"github.com/mattn/go-isatty"
 	"strings"
-	"syscall"
 	"unsafe"
-)
-
-var kernel32 = syscall.NewLazyDLL("kernel32.dll")
-
-var (
-	ProcGetConsoleScreenBufferInfo = kernel32.NewProc("GetConsoleScreenBufferInfo")
-	procSetConsoleCursorPosition   = kernel32.NewProc("SetConsoleCursorPosition")
-	procFillConsoleOutputCharacter = kernel32.NewProc("FillConsoleOutputCharacterW")
 )
 
 // clear the line and move the cursor up
@@ -57,12 +49,12 @@ func (w *Writer) clearLines() {
 	}
 	fd := f.Fd()
 	var csbi ConsoleScreenBufferInfo
-	_, _, _ = ProcGetConsoleScreenBufferInfo.Call(fd, uintptr(unsafe.Pointer(&csbi)))
+	_, _, _ = kernel.ProcGetConsoleScreenBufferInfo.Call(fd, uintptr(unsafe.Pointer(&csbi)))
 
 	for i := 0; i < w.lineCount; i++ {
 		// move the cursor up
 		csbi.cursorPosition.y--
-		_, _, _ = procSetConsoleCursorPosition.Call(fd, uintptr(*(*int32)(unsafe.Pointer(&csbi.cursorPosition))))
+		_, _, _ = kernel.ProcSetConsoleCursorPosition.Call(fd, uintptr(*(*int32)(unsafe.Pointer(&csbi.cursorPosition))))
 		// clear the line
 		cursor := coord{
 			x: csbi.window.left,
@@ -70,6 +62,6 @@ func (w *Writer) clearLines() {
 		}
 		var count, w dword
 		count = dword(csbi.size.x)
-		_, _, _ = procFillConsoleOutputCharacter.Call(fd, uintptr(' '), uintptr(count), *(*uintptr)(unsafe.Pointer(&cursor)), uintptr(unsafe.Pointer(&w)))
+		_, _, _ = kernel.ProcFillConsoleOutputCharacter.Call(fd, uintptr(' '), uintptr(count), *(*uintptr)(unsafe.Pointer(&cursor)), uintptr(unsafe.Pointer(&w)))
 	}
 }

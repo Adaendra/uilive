@@ -4,7 +4,7 @@
 package terminal
 
 import (
-	"github.com/Adaendra/uilive/pkg/writer"
+	"github.com/Adaendra/uilive/pkg/kernel"
 	"golang.org/x/sys/windows"
 	"os"
 	"unsafe"
@@ -18,7 +18,7 @@ func GetTermSize() (int, int) {
 	defer out.Close()
 
 	var csbi windows.ConsoleScreenBufferInfo
-	ret, _, _ := writer.ProcGetConsoleScreenBufferInfo.Call(out.Fd(), uintptr(unsafe.Pointer(&csbi)))
+	ret, _, _ := kernel.ProcGetConsoleScreenBufferInfo.Call(out.Fd(), uintptr(unsafe.Pointer(&csbi)))
 	if ret == 0 {
 		return 0, 0
 	}
